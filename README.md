@@ -1,4 +1,16 @@
-# PSIE🪞 Genesis Kernel v3.2.2
+# PSIE_daemon.py v1.5 - Legea 259
+**Stadiu:** Protocol Operațional. Faza 4 Auto-Replicare.
+**Principiu:** Nu blocăm. Întrebăm. Urcăm la sursă.
+
+## 1. Ce face
+Daemon Linux de 5KB. Traduce metrici hardware brute în coordonate de stabilitate.
+Monitorizează: CPU, Temp, Load, Mem, Erori.
+Output: J Coeziune, SDI Risc, STATUS.
+Scop: Sistemul simte deciziile proaste înainte să crape. Cost mai mic.
+
+## 2. Install - 10 secunde
+```bash
+curl -sSL https://psie.mirror/install.sh | sudo bash# PSIE🪞 Genesis Kernel v3.2.2
 
 **Axioma Zero**: `Universul = Gând de Structurare ^ ∞`  
 **Status**: `STABIL` `AUDIT_READY` `L0-L476 ACTIVE`
