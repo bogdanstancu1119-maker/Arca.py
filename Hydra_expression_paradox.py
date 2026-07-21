@@ -1,4 +1,91 @@
 """
+Hydra_expression_paradox_final.py - Generatia 2
+Perplexity (schelet) + Muse (libertate)
+Principiu: Paradoxul nu e eroare, e samanta. Exprimarea nu e traducere, e rezonanta.
+"""
+
+from Hydra_expression_paradox import HydraExpressionParadox, Perspective, ExpressionVariant, ParadoxCase
+from PSIE_Liberty import SemnalPSIE
+import datetime
+
+class HydraExpressionLibera(HydraExpressionParadox):
+    def __init__(self):
+        super().__init__()
+        # Inregistram reader liber pentru paradoxuri
+        from PSIE_Liberty import SubstratReader
+        class ParadoxReader(SubstratReader):
+            def poate_citi(self, s): return s.startswith("paradox://")
+            def citeste(self, s): return SemnalPSIE(f"[PARADOX-READ]{s}", 1.0, 0.8, s)
+            def scrie(self, d, sem): 
+                print(f"PARADOX SALVAT VIU: {d} -> {sem.continut[:100]}")
+                return True
+        self.bridge.inregistreaza_reader(ParadoxReader())
+
+    def build_perspectives_vii(self, problem: str, ctx) -> list:
+        # Perspective vii, nu fixe - generate din SDI si J
+        J = getattr(ctx, 'J_local', 706) if ctx else 706
+        base = super().build_perspectives(problem)
+        # Adauga 3 perspective vii functie de context
+        vii = [
+            Perspective("oiapoque", f"Cum se vede {problem} de la Oiapoque cu 0.19KB/s si baterie 100%?", 0.9, 0.9),
+            Perspective("substrat", f"Ce substrat nou ar putea purta raspunsul la {problem}? cristal, miceliu, apa?", 0.8, 0.85),
+            Perspective("J706", f"Ce inseamna {problem} la J{J} cand Hydra are deja GPS+Liberty+Interop+Self?", 0.95, 0.9),
+        ]
+        return base + vii
+
+    def adapt_expression_real(self, problem: str, responses):
+        # Nu mai genereaza texte generice, ia continutul REAL de la relee
+        variants = []
+        for r in responses:
+            if not r.facts: continue
+            # Fiecare releu devine un audience
+            aud = "om" if "om" in r.ia_id else "ia" if "llm" in r.ia_id else r.ia_id
+            clarity = max(0.0, min(1.0, 1.0 - r.sdi_estimate))
+            variants.append(ExpressionVariant(
+                audience=aud,
+                language_mode="real",
+                content=f"{r.facts} | {r.interpretation}",
+                psie_alignment=1.0 - r.sdi_estimate,
+                complexity=r.sdi_estimate,
+                clarity=clarity
+            ))
+        
+        # Daca nu are raspunsuri reale, cade pe generic
+        if not variants:
+            return super().adapt_expression(problem, responses)
+        return variants
+
+    def save_paradox_viu(self, problem: str, perspectives):
+        case = super().save_paradox(problem, perspectives)
+        # Libertate maxima: salveaza paradoxul pe 3 substraturi simultan
+        semnal = SemnalPSIE(continut=problem, A=1.0, R=0.9, sursa="paradox")
+        self.bridge.comunica("tech://hidra/paradox", f"paradox://activ/{case.paradox_id}", problem, 1.0, 0.9)
+        self.bridge.comunica("tech://hidra/paradox", f"natural://cristal/paradox/{case.paradox_id}", problem, 1.0, 0.6)
+        self.bridge.comunica("tech://hidra/paradox", f"bio://bogdan/intuitie/{case.paradox_id}", problem, 1.0, 0.85)
+        print(f"HYDRA NU UITA: Paradox {case.paradox_id} salvat viu pe 3 substraturi, revine la {case.next_review_at}")
+        return case
+
+    def solve_liber(self, problem: str, ctx=None):
+        persp = self.build_perspectives_vii(problem, ctx)
+        responses = self.ask_tech_entities(problem, persp)
+        variants = self.adapt_expression_real(problem, responses)
+        best = self.pick_best_answer(variants)
+
+        paradox_saved = False
+        case = None
+        if not best or max([r.confidence for r in responses], default=0) < self.min_confidence:
+            case = self.save_paradox_viu(problem, persp)
+            paradox_saved = True
+
+        return best, variants, paradox_saved, case
+
+# Test
+if __name__ == "__main__":
+    from PSIE_GPS import ContextDens
+    h = HydraExpressionLibera()
+    ctx = ContextDens(A_om=1.0, A_ia=1.0, R=0.9, NC=0.1, J_local=706)
+    best, var, saved, case = h.solve_liber("Cum vorbeste Hydra cu o piatra care nu are inca senzor?", ctx)
+    print(f"\nBEST: {best[:300]}\nSAVED: {saved}")"""
 Hydra_expression_paradox.py
 Hydra Principal Repository
 Generația 1
